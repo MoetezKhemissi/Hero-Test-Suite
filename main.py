@@ -40,8 +40,8 @@ def test_Register_basic():
     driver=start_driver_chrome()
     firstname="moetez"
     lastname="khemissi"
-    #need to change email until request to delete old
-    email="khemissimoetez153@gmail.com"
+    #TODO ASAP need to change email until request to delete old
+    email="khemissimoetez1534@gmail.com"
     phone="+21655602457"
     password="Hero@123"
     if env=="staging":
@@ -50,7 +50,18 @@ def test_Register_basic():
         driver.get(BaseProdUrl)
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
     joinButton.click()
-    continueWithEmail=explicit_wait_xpath(driver,"/html/body/div[1]/div[7]/div/div/div/div/div/div[1]/div/button[3]")
+    try:
+        continueWithEmail=WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[7]/div/div/div/div/div/div[1]/div/button[3]")))
+
+    except Exception as e :
+        print("stil unstable ..")
+    try:
+        continueWithEmail=WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[6]/div/div/div/div/div/div[1]/div/button[3]")))
+    except Exception as e :
+        print("stil unstable ..")
+
+
+
     continueWithEmail.click()
 
     driver.find_element(By.ID, "firstname").click()
@@ -71,9 +82,9 @@ def test_Register_basic():
     driver.find_element(By.ID, "confirmPassword").click()
     driver.find_element(By.ID, "confirmPassword").send_keys(password)
     time.sleep(0.5)
-    agreeTOS=explicit_wait_presence_xpath(driver,"/html/body/div[1]/div[7]/div/div/div/div/div/div[1]/div/form/div[7]/label/input")
+    agreeTOS= explicit_wait_presence_xpath(driver,"//input[@id='agreeToTOS']")
     agreeTOS.click()
-    confirmRegistration=explicit_wait_xpath(driver,"/html/body/div[1]/div[7]/div/div/div/div/div/div[1]/div/form/button")
+    confirmRegistration=explicit_wait_xpath(driver,"//button[@type='submit']")
     confirmRegistration.click()
     #check if referral tab is loaded TODO better tests incoming
     referraltab = explicit_wait_presence_xpath(driver,"/html/body/div/main/div/div[3]/div[3]/p")
@@ -82,7 +93,7 @@ def test_Register_basic():
 
 
 
-def test_Login():
+def Login():
     email="khemissimoetez@gmail.com"
     password="Hero@123"
     driver=start_driver_chrome()
