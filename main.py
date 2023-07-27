@@ -43,7 +43,7 @@ def explicit_wait_presence_xpath(driver,xpath_string):
 
 
 #------------------------Navigation-----------------------------------
-def test_Register_basic():
+def Register_basic():
     driver=start_driver_chrome()
     firstname="moetez"
     lastname="khemissi"
