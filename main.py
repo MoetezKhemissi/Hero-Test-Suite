@@ -10,8 +10,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
-from config import default_wait_time
-from data import Languague,FeedUrlVariations
+from config import default_wait_time,env
+from data import Languague,FeedUrlVariations,BaseProdUrl,BaseStagingUrl
 from selenium.webdriver.support.ui import Select
 
 
@@ -43,7 +43,10 @@ def test_Register_basic():
     email="khemissimoetez153@gmail.com"
     phone="+21655602457"
     password="Hero@123"
-    driver.get("https://herocircle.app/")
+    if env=="staging":
+        driver.get(BaseStagingUrl)
+    else:
+        driver.get(BaseProdUrl)
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
     action_click(driver,joinButton)
     continueWithEmail=explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/div/div[1]/div/button[3]")
@@ -81,7 +84,10 @@ def test_Login():
     email="khemissimoetez@gmail.com"
     password="Hero@123"
     driver=start_driver_chrome()
-    driver.get("https://herocircle.app/")
+    if env=="staging":
+        driver.get(BaseStagingUrl)
+    else:
+        driver.get(BaseProdUrl)
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
     action_click(driver,joinButton)
     loginTab = explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/ul/li[2]/a")

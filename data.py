@@ -4,4 +4,6 @@ Languague={
     "ES":"es-ES",
     "NL":"nl-NL"
 }
-FeedUrlVariations =["https://herocircle.app/feeds/circles2","https://herocircle.app/fr-FR/feeds/circles2","https://herocircle.app/nl-NL/feeds/circles2","https://herocircle.app/es-ES/feeds/circles2"]
+BaseProdUrl="https://herocircle.app/"
+BaseStagingUrl="https://staging.herocircle.app/"
+FeedUrlVariations =[BaseProdUrl+"feeds/circles2",BaseProdUrl+"fr-FR/feeds/circles2",BaseProdUrl+"nl-NL/feeds/circles2",BaseProdUrl+"es-ES/feeds/circles2",BaseStagingUrl+"feeds/circles2",BaseStagingUrl+"fr-FR/feeds/circles2",BaseStagingUrl+"nl-NL/feeds/circles2",BaseStagingUrl+"es-ES/feeds/circles2"]
