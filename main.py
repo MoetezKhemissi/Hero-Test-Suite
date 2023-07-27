@@ -11,7 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
 from config import default_wait_time
-from data import Languague
+from data import Languague,FeedUrlVariations
 from selenium.webdriver.support.ui import Select
 
 
@@ -25,6 +25,8 @@ def action_click(driver,element):
     action.perform()
 def explicit_wait_xpath(driver,xpath_string):
     return WebDriverWait(driver, default_wait_time).until(EC.element_to_be_clickable((By.XPATH, xpath_string)))
+def explicit_wait_presence_xpath(driver,xpath_string):
+    return WebDriverWait(driver, default_wait_time).until(EC.presence_of_element_located((By.XPATH, xpath_string)))
 
 
 
@@ -33,7 +35,14 @@ def explicit_wait_xpath(driver,xpath_string):
 
 
 #------------------------Navigation-----------------------------------
-def Register_basic(driver,firstname,lastname,email,phone,password):
+def test_Register_basic():
+    driver=start_driver_chrome()
+    firstname="moetez"
+    lastname="khemissi"
+    #need to change email until request to delete old
+    email="khemissimoetez153@gmail.com"
+    phone="+21655602457"
+    password="Hero@123"
     driver.get("https://herocircle.app/")
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
     action_click(driver,joinButton)
@@ -61,10 +70,17 @@ def Register_basic(driver,firstname,lastname,email,phone,password):
     action_click(driver,agreeTOS)
     confirmRegistration=explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/div/div[1]/div/form/button")
     action_click(driver,confirmRegistration)
-    time.sleep(100)
+    #check if referral tab is loaded TODO better tests incoming
+    referraltab = explicit_wait_presence_xpath(driver,"/html/body/div/main/div/div[3]/div[3]/p")
+    time.sleep(3)
+    assert driver.current_url in FeedUrlVariations
 
 
-def Login(driver,email,password):
+
+def test_Login():
+    email="khemissimoetez@gmail.com"
+    password="Hero@123"
+    driver=start_driver_chrome()
     driver.get("https://herocircle.app/")
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
     action_click(driver,joinButton)
@@ -80,7 +96,11 @@ def Login(driver,email,password):
     passwordField = driver.find_element(By.XPATH, "/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/form/div[2]/div/input")
     passwordField.send_keys(password)
     submitButton=driver.find_element(By.XPATH,"/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/form/button").click()
-    time.sleep(5)
+    #check if referral tab is loaded TODO better tests incoming
+    referraltab = explicit_wait_presence_xpath(driver,"/html/body/div/main/div/div[3]/div[3]/p")
+    time.sleep(3)
+    assert driver.current_url in FeedUrlVariations
+
 
 
 def Payment(driver):
@@ -149,10 +169,11 @@ def post_victory(driver,title_text,summary_text,body_text):
 
 
 
-driver = start_driver_edge()
+#driver = start_driver_chrome()
+#Login(driver,"khemissimoetez@gmail.com","Hero@123")
 #Register_basic(driver,"moetez","khemissi","khemissimoetez15315@gmail.com","+21655602457","Hero@123")
-Login(driver,"khemissimoetez@gmail.com","Hero@123")
-change_languague(Languague["NL"])
+#Login(driver,"khemissimoetez@gmail.com","Hero@123")
+#change_languague(Languague["NL"])
 #Payment(driver)
 #Logout(driver)
 
