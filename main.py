@@ -14,7 +14,7 @@ from config import default_wait_time,env
 from data import Languague,FeedUrlVariations,BaseProdUrl,BaseStagingUrl
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
-
+import re
 
 
 
@@ -93,24 +93,29 @@ def test_Register_basic():
 
 
 
-def Login():
+def Login(driver):
     email="khemissimoetez@gmail.com"
     password="Hero@123"
-    driver=start_driver_chrome()
     if env=="staging":
         driver.get(BaseStagingUrl)
     else:
         driver.get(BaseProdUrl)
+    try:
+        AcceptCookie=explicit_wait_xpath(driver,"/html/body/div/section/div/button[1]")
+        time.sleep(1)
+        AcceptCookie.click()
+    except Exception as e:
+        print("Cookie Already accepted")
 
-    joinButton=explicit_wait_presence_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
-    
+    joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
+    time.sleep(1)
     joinButton.click()
     time.sleep(1)
 
     loginTab = WebDriverWait(driver, default_wait_time).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href,"#tabs-Login")]')))
     loginTab.click()
     time.sleep(2)
-#tabs-Login > div > button:nth-child(4)
+
 
     try:
         continueWithEmail=WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/button[3]")))
@@ -140,28 +145,45 @@ def Login():
 
         
     #check if referral tab is loaded TODO better tests incoming
+
+
+def test_login():
+    driver=start_driver_chrome()
+    Login(driver)
     referraltab = explicit_wait_presence_xpath(driver,"/html/body/div/main/div/div[3]/div[3]/p")
     time.sleep(3)
     assert driver.current_url in FeedUrlVariations
 
 
-
-def Payment(driver):
-    driver.get("https://herocircle.app/circle/eu-viable-world-for-all-circle/members")
+def test_Payment():
+    driver=start_driver_chrome()
+    Login(driver)
+    time.sleep(10)
+    if env=="staging":
+        driver.get(BaseStagingUrl+"circle/eu-viable-world-for-all-circle/members")
+    else:
+        driver.get(BaseProdUrl+"circle/eu-viable-world-for-all-circle/members")
     PaymentButton=explicit_wait_xpath(driver,"/html/body/div[1]/main/div/article/div[2]/div[1]/div[2]/div/button")
+    time.sleep(0.5)
     PaymentButton.click()
+    time.sleep(0.5)
     #TODO support for amount of Payment and specific circle
     NextButton=explicit_wait_xpath(driver,"/html/body/div[1]/div[4]/div/div/div/div[3]/button")
+    time.sleep(0.5)
     NextButton.click()
+    time.sleep(0.5)
     GlobalCircle=explicit_wait_xpath(driver,"/html/body/div[1]/div[4]/div/div/div/div[1]/div[1]/input")
+    time.sleep(0.5)
     GlobalCircle.click()
+    time.sleep(0.5)
     #Stability on languagues
     NextButton=explicit_wait_xpath(driver,"/html/body/div[1]/div[4]/div/div/div/div[2]/button")
+    time.sleep(0.5)
     NextButton.click()
     time.sleep(5)
     #for further testing just temporairly check if it is stripe url
-    print(driver.current_url)
-    time.sleep(100)
+    assert bool(re.search("https:\/\/checkout\.stripe\.com(.)*", driver.current_url))
+
    
 
 
