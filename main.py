@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from config import default_wait_time,env
 from data import Languague,FeedUrlVariations,BaseProdUrl,BaseStagingUrl
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
 
 
 
@@ -81,7 +82,7 @@ def test_Register_basic():
 
 
 
-def Login():
+def test_Login():
     email="khemissimoetez@gmail.com"
     password="Hero@123"
     driver=start_driver_chrome()
@@ -97,20 +98,36 @@ def Login():
 
     loginTab = WebDriverWait(driver, default_wait_time).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href,"#tabs-Login")]')))
     loginTab.click()
+    time.sleep(2)
 #tabs-Login > div > button:nth-child(4)
-    print("finding ..")
-    continueWithEmail=WebDriverWait(driver, default_wait_time).until(EC.element_to_be_clickable((By.TAG_NAME, 'button')))
-    print("found")
+
+    try:
+        continueWithEmail=WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/button[3]")))
+    except Exception as e:
+        print("Unstable frontend")
+    try:
+        continueWithEmail=WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[7]/div/div/div/div/div/div[2]/div/button[3]")))
+    except Exception as e:
+        print("Unstable frontend")
     time.sleep(1)
     continueWithEmail.click()
-    emailField = driver.find_element(By.XPATH, "/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/form/div[1]/div/input")
+    emailField = explicit_wait_presence_xpath(driver,"//input[@id='email']")
     emailField.click()
     emailField.send_keys(email)
     #prevent ghosting
     time.sleep(1)
-    passwordField = driver.find_element(By.XPATH, "/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/form/div[2]/div/input")
+    passwordField = explicit_wait_presence_xpath(driver,"//input[@id='password']")
     passwordField.send_keys(password)
-    submitButton=driver.find_element(By.XPATH,"/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/form/button").click()
+    try:
+        submitButton=driver.find_element(By.XPATH,"/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/form/button").click()
+    except Exception as e :
+        print("to be improved ..")
+    try:
+        submitButton=driver.find_element(By.XPATH,"/html/body/div[1]/div[7]/div/div/div/div/div/div[2]/div/form/button").click()
+    except Exception as e :
+        print("to be improved ..")
+
+        
     #check if referral tab is loaded TODO better tests incoming
     referraltab = explicit_wait_presence_xpath(driver,"/html/body/div/main/div/div[3]/div[3]/p")
     time.sleep(3)
