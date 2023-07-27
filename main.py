@@ -48,9 +48,10 @@ def test_Register_basic():
     else:
         driver.get(BaseProdUrl)
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
-    action_click(driver,joinButton)
-    continueWithEmail=explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/div/div[1]/div/button[3]")
-    action_click(driver,continueWithEmail)
+    joinButton.click()
+    continueWithEmail=explicit_wait_xpath(driver,"/html/body/div[1]/div[7]/div/div/div/div/div/div[1]/div/button[3]")
+    continueWithEmail.click()
+
     driver.find_element(By.ID, "firstname").click()
     driver.find_element(By.ID, "firstname").send_keys(firstname)
     time.sleep(0.5)
@@ -69,10 +70,10 @@ def test_Register_basic():
     driver.find_element(By.ID, "confirmPassword").click()
     driver.find_element(By.ID, "confirmPassword").send_keys(password)
     time.sleep(0.5)
-    agreeTOS=explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/div/div[1]/div/form/div[7]/label/input")
-    action_click(driver,agreeTOS)
-    confirmRegistration=explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/div/div[1]/div/form/button")
-    action_click(driver,confirmRegistration)
+    agreeTOS=explicit_wait_presence_xpath(driver,"/html/body/div[1]/div[7]/div/div/div/div/div/div[1]/div/form/div[7]/label/input")
+    agreeTOS.click()
+    confirmRegistration=explicit_wait_xpath(driver,"/html/body/div[1]/div[7]/div/div/div/div/div/div[1]/div/form/button")
+    confirmRegistration.click()
     #check if referral tab is loaded TODO better tests incoming
     referraltab = explicit_wait_presence_xpath(driver,"/html/body/div/main/div/div[3]/div[3]/p")
     time.sleep(3)
@@ -80,7 +81,7 @@ def test_Register_basic():
 
 
 
-def test_Login():
+def Login():
     email="khemissimoetez@gmail.com"
     password="Hero@123"
     driver=start_driver_chrome()
@@ -88,12 +89,20 @@ def test_Login():
         driver.get(BaseStagingUrl)
     else:
         driver.get(BaseProdUrl)
-    joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
-    action_click(driver,joinButton)
-    loginTab = explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/ul/li[2]/a")
-    action_click(driver,loginTab)
-    continueWithEmail=explicit_wait_xpath(driver,"/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/button[3]")
-    action_click(driver,continueWithEmail)
+
+    joinButton=explicit_wait_presence_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
+    
+    joinButton.click()
+    time.sleep(1)
+
+    loginTab = WebDriverWait(driver, default_wait_time).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href,"#tabs-Login")]')))
+    loginTab.click()
+#tabs-Login > div > button:nth-child(4)
+    print("finding ..")
+    continueWithEmail=WebDriverWait(driver, default_wait_time).until(EC.element_to_be_clickable((By.TAG_NAME, 'button')))
+    print("found")
+    time.sleep(1)
+    continueWithEmail.click()
     emailField = driver.find_element(By.XPATH, "/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/form/div[1]/div/input")
     emailField.click()
     emailField.send_keys(email)
