@@ -41,13 +41,14 @@ def test_Register_basic():
     firstname="moetez"
     lastname="khemissi"
     #TODO ASAP need to change email until request to delete old
-    email="khemissimoetez1534@gmail.com"
+    email="khemissimoetez66666@gmail.com"
     phone="+21655602457"
     password="Hero@123"
     if env=="staging":
         driver.get(BaseStagingUrl)
     else:
         driver.get(BaseProdUrl)
+    accept_cookie(driver)
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
     joinButton.click()
     try:
@@ -92,7 +93,13 @@ def test_Register_basic():
     assert driver.current_url in FeedUrlVariations
 
 
-
+def accept_cookie(driver):
+    try:
+        AcceptCookie=explicit_wait_xpath(driver,"/html/body/div/section/div/button[1]")
+        time.sleep(1)
+        AcceptCookie.click()
+    except Exception as e:
+        print("Cookie Already accepted")
 def Login(driver):
     email="khemissimoetez@gmail.com"
     password="Hero@123"
@@ -100,12 +107,7 @@ def Login(driver):
         driver.get(BaseStagingUrl)
     else:
         driver.get(BaseProdUrl)
-    try:
-        AcceptCookie=explicit_wait_xpath(driver,"/html/body/div/section/div/button[1]")
-        time.sleep(1)
-        AcceptCookie.click()
-    except Exception as e:
-        print("Cookie Already accepted")
+    accept_cookie(driver)
 
     joinButton=explicit_wait_xpath(driver,"/html/body/div[1]/nav/div[3]/div/button")
     time.sleep(1)
@@ -158,7 +160,7 @@ def test_login():
 def test_Payment():
     driver=start_driver_chrome()
     Login(driver)
-    time.sleep(10)
+    time.sleep(5)
     if env=="staging":
         driver.get(BaseStagingUrl+"circle/eu-viable-world-for-all-circle/members")
     else:
