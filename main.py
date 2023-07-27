@@ -51,6 +51,7 @@ def test_Register_basic():
     rdm_string=get_random_string(6)
     #TODO ASAP need to change email until request to delete old
     email="khemissimoetez"+rdm_string+"@gmail.com"
+    print(email)
     phone="+21655602457"
     password="Hero@123"
     if os.getenv('TEST_ENV_TARGET')=="staging":
