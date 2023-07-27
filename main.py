@@ -211,7 +211,9 @@ def change_languague(lang):
     Select(WebDriverWait(driver, default_wait_time).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/nav/div[3]/div/label/select")))).select_by_value(lang)
 
 def start_driver_chrome():
-    driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
     driver.maximize_window()   
     return driver 
 def start_driver_edge():
