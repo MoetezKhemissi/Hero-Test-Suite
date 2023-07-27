@@ -10,16 +10,22 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
-from config import default_wait_time,env
+from config import default_wait_time
 from data import Languague,FeedUrlVariations,BaseProdUrl,BaseStagingUrl
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import re
-
+import os
+import string
+import random
 
 
 #------------------------Helpers-----------------------------------
-
+def get_random_string(length):
+    # choose from all lowercase letter
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
 def action_click(driver,element):
     action = ActionChains(driver)
     action.click(on_element = element)
@@ -40,11 +46,13 @@ def test_Register_basic():
     driver=start_driver_chrome()
     firstname="moetez"
     lastname="khemissi"
+    
+    rdm_string=get_random_string(6)
     #TODO ASAP need to change email until request to delete old
-    email="khemissimoetez66666@gmail.com"
+    email="khemissimoetez"+rdm_string+"@gmail.com"
     phone="+21655602457"
     password="Hero@123"
-    if env=="staging":
+    if os.getenv('TEST_ENV_TARGET')=="staging":
         driver.get(BaseStagingUrl)
     else:
         driver.get(BaseProdUrl)
@@ -103,7 +111,7 @@ def accept_cookie(driver):
 def Login(driver):
     email="khemissimoetez@gmail.com"
     password="Hero@123"
-    if env=="staging":
+    if os.getenv('TEST_ENV_TARGET')=="staging":
         driver.get(BaseStagingUrl)
     else:
         driver.get(BaseProdUrl)
@@ -161,7 +169,7 @@ def test_Payment():
     driver=start_driver_chrome()
     Login(driver)
     time.sleep(5)
-    if env=="staging":
+    if os.getenv('TEST_ENV_TARGET')=="staging":
         driver.get(BaseStagingUrl+"circle/eu-viable-world-for-all-circle/members")
     else:
         driver.get(BaseProdUrl+"circle/eu-viable-world-for-all-circle/members")
